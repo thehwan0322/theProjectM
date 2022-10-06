@@ -8,8 +8,8 @@
 	
 	<select id="boardList" parameterType="map" resultType="board">
 		SELECT * FROM (
-		SELECT rownum rnum, a.* FROM (SELECT * FROM pmboard WHERE pmbboardid = #{pmbboardid}
-		ORDER BY pmbref DESC) a)
+		SELECT rownum rnum, a.* FROM (SELECT * FROM board WHERE boardid = #{boardid}
+		ORDER BY ref DESC, refstep) a)
 		WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 	

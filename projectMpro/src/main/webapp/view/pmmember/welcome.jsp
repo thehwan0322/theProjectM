@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-${index }
+<h1><%=session.getAttribute("id") %>님이 로그인 하셨습니다.</h1>
 </body>
 </html>

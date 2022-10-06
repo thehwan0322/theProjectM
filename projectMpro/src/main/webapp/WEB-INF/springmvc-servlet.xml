@@ -20,7 +20,7 @@
 	<!-- css, js, html 웹에서 제공되는 파일의 기본 기능 제외 -->
 	<mvc:default-servlet-handler/>
 	
-	<mvc:view-controller path="/index" view-name="index" />
+	<mvc:view-controller path="/welcome" view-name="welcome" />
 	
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/view/" />
@@ -42,7 +42,7 @@
 		<property name="driverClass"><value>oracle.jdbc.OracleDriver</value></property>
         <property name="jdbcUrl"><value>jdbc:oracle:thin:@localhost:1521:xe</value></property>
         <property name="user"><value>c##kic</value></property>
-        <property name="password"><value>8898</value></property>
+        <property name="password"><value>1234</value></property>
         <property name="maxPoolSize"><value>20</value></property><!-- 최대 연결 객체 갯수 -->
         <property name="minPoolSize"><value>3</value></property> <!-- 최소 연결 객체 갯수 -->
         <property name="initialPoolSize"><value>5</value></property> <!-- 초기 연결 객체 갯수 -->
@@ -62,14 +62,14 @@
    	
    	<mvc:interceptors>
    		<mvc:interceptor>
-   			<mvc:mapping path="/member/memberInfo"/>
-   			<mvc:mapping path="/member/memberUpdateForm"/>
-   			<mvc:mapping path="/member/memberDelete"/>
+   			<mvc:mapping path="/pmmember/pmmemberInfo"/>
+   			<mvc:mapping path="/pmmember/pmmemberUpdateForm"/>
+   			<mvc:mapping path="/pmmember/pmmemberDelete"/>
    			<bean class="service.LoginInterceptor"/>
    		</mvc:interceptor>
    		
    		<mvc:interceptor>
-   			<mvc:mapping path="/member/memberList"/>
+   			<mvc:mapping path="/pmmember/pmmemberList"/>
    			<bean class="service.AdminInterceptor"/>
    		</mvc:interceptor>
    	</mvc:interceptors>
