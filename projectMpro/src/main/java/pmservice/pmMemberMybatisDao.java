@@ -10,30 +10,30 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import model.Member;
+import pmmodel.pmMember;
 
 @Repository
-public class MemberMybatisDao {
+public class pmMemberMybatisDao {
 	
-	private static final String ns = "member.";
+	private static final String ns = "pmmember.";
 	
 	@Autowired
 	private SqlSessionTemplate session;
 	
-	public int insertMember(Member mem) {
+	public int insertMember(pmMember mem) {
 		int num = session.insert(ns + "insertMember", mem);	
 		
 		return num;		
 	}
 	
-	public Member selectOne(String id) {
-		Member member = session.selectOne(ns + "selectOne", id);
+	public pmMember selectOne(String id) {
+		pmMember member = session.selectOne(ns + "selectOne", id);
 		
 		return member;
 	}
 	
 		
-	public int updateMember(Member mem) {
+	public int updateMember(pmMember mem) {
 		int num = session.update(ns + "updateMember", mem);	
 		
 		return num;				
@@ -55,8 +55,8 @@ public class MemberMybatisDao {
 		return num;		
 	}
 
-	public List<Member> memberList() {
-		List<Member> list = session.selectList(ns + "memberList");	
+	public List<pmMember> memberList() {
+		List<pmMember> list = session.selectList(ns + "memberList");	
 		
 		return list;				
 	}

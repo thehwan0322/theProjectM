@@ -13,7 +13,7 @@
 			<caption>게시글 삭제 화면</caption>
 			<tr>
 				<td>게시글 비밀번호</td>
-				<td><input type="password" name="pmbpass"></td>
+				<td><input type="password" name="pass"></td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="submit" value="게시글삭제"></td>

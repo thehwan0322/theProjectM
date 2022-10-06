@@ -4,12 +4,12 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<typeAlias type="model.Member" alias="member"/>
-		<typeAlias type="model.Board" alias="board"/>
+		<typeAlias type="pmmodel.pmMember" alias="pmmember"/>
+		<typeAlias type="pmmodel.pmBoard" alias="pmboard"/>
 	</typeAliases>
 	
 	<mappers>
-		<mapper resource="mybatis/MemberMapper.xml"/>
-		<mapper resource="mybatis/BoardMapper.xml"/>
+		<mapper resource="mybatis/pmMemberMapper.xml"/>
+		<mapper resource="mybatis/pmBoardMapper.xml"/>
 	</mappers>
 </configuration>

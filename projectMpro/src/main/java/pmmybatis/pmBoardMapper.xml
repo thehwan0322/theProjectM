@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pmboard">
+	<select id="boardCount" parameterType="string" resultType="int">
+		SELECT nvl(COUNT(*), 0) FROM board WHERE pmboardid = #{value}
+	</select>
+	
+	<select id="boardList" parameterType="map" resultType="pmboard">
+		SELECT * FROM (
+		SELECT rownum rnum, a.* FROM (SELECT * FROM pmboard WHERE pmboardid = #{pmboardid}
+		ORDER BY pmbref DESC) a)
+		WHERE rnum BETWEEN #{start} AND #{end}
+	</select>
+	
+	<insert id="insertBoard" parameterType="pmboard">
+		INSERT INTO pmboard values
+		(pmboardseq.nextval, #{pmname}, #{pmpass}, #{subject}, #{pmcontent}, #{pmfile1},
+		sysdate, 0, pmboardseq.currval, #{reflevel}, #{refstep}, #{pmboardid})
+	</insert>
+	
+	<insert id="insertReply" parameterType="pmboard">
+		INSERT INTO board values
+		(boardseq.nextval, #{name}, #{pass}, #{subject}, #{content}, #{file1},
+		sysdate, 0, #{ref}, #{reflevel}, #{refstep}, #{boardid})
+	</insert>
+	
+	<select id="boardOne" parameterType="int" resultType="pmboard">
+		SELECT * FROM board WHERE num = #{value}
+	</select>
+	
+	<update id="readCountUp" parameterType="int">
+		UPDATE pmboard SET readcnt = readcnt + 1 WHERE num = #{value}
+	</update>
+	
+	<update id="refStepAdd" parameterType="map">
+		UPDATE pmboard SET refstep = refstep + 1 WHERE ref = #{ref} AND refstep > #{refstep}
+	</update>
+	
+	<update id="boardUpdate" parameterType="pmboard">
+		UPDATE pmboard SET subject = #{subject}, content = #{content}, file1 = #{file1}
+		WHERE num = #{num}
+	</update>
+	
+	<delete id="boardDelete" parameterType="int">
+		DELETE FROM pmboard WHERE num = #{num}
+	</delete>
+	
+
+</mapper>

@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import model.Board;
-import service.BoardMybatisDao;
+import pmmodel.pmBoard;
+import pmservice.pmBoardMybatisDao;
 
 @Controller
-@RequestMapping("/board/")
-public class BoardController {
+@RequestMapping("/pmboard/")
+public class pmBoardController {
 
 	@Autowired
-	BoardMybatisDao bd;
+	pmBoardMybatisDao bd;
 
 	HttpServletRequest request;
 	Model m;
@@ -37,50 +37,50 @@ public class BoardController {
 		this.session = request.getSession();
 	}
 
-	public BoardController() throws Exception {
-		System.out.println("board");
+	public pmBoardController() throws Exception {
+		System.out.println("pmboard");
 	}
 
-	@RequestMapping("index")
-	public String index() throws Exception {
-		System.out.println("index");
-		request.setAttribute("index", "board 입니다");
-		return "/index";
+	@RequestMapping("welcome")
+	public String welcome() throws Exception {
+		System.out.println("welcome");
+		request.setAttribute("welcome", "pmboard 입니다");
+		return "/welcome";
 	}
 
-	@RequestMapping("boardForm")
-	public String boardForm() throws Exception {
+	@RequestMapping("pmboardForm")
+	public String pmboardForm() throws Exception {
 
-		return "board/boardForm";
+		return "pmboard/pmboardForm";
 	}
 
-	@RequestMapping("boardPro")
-	public String boardPro(@RequestParam("uploadfile") MultipartFile multipartFile, Board board) throws Exception {
-		String path = request.getServletContext().getRealPath("/") + "view/board/img";
+	@RequestMapping("pmboardPro")
+	public String pmboardPro(@RequestParam("uploadfile") MultipartFile multipartFile, pmBoard board) throws Exception {
+		String path = request.getServletContext().getRealPath("/") + "view/pmboard/pmimg";
 
 		if (!multipartFile.isEmpty()) {
 			File file = new File(path, multipartFile.getOriginalFilename());
-			board.setFile1(multipartFile.getOriginalFilename());
+			board.setPmbfile1(multipartFile.getOriginalFilename());
 			multipartFile.transferTo(file);
 
 		} else {
-			board.setFile1("");
+			board.setPmbfile1("");
 		}
 
 		String filename = null;
 		String msg = "게시물 등록 실패.";
-		String url = "/board/boardForm";
+		String url = "/pmboard/pmboardForm";
 
 		HttpSession session = request.getSession();
 		String boardid = (String) session.getAttribute("boardid");
 		if (boardid == null)
 			boardid = "1";
-		board.setBoardid(boardid);
-		int num = bd.insertBoard(board);
-
+		board.setPmbboardid(boardid);
+		int num = bd.insertBoard(board);  
+ 
 		if (num > 0) {
 			msg = "게시물 등록 성공";
-			url = "/board/boardList";
+			url = "/pmboard/pmboardList";
 		}
 
 		System.out.println(board);
@@ -90,12 +90,12 @@ public class BoardController {
 		return "alert";
 	}
 
-	@RequestMapping("boardList")
-	public String boardList() throws Exception {
+	@RequestMapping("pmboardList")
+	public String pmboardList() throws Exception {
 		HttpSession session = request.getSession();
 
-		if (request.getParameter("boardid") != null) {
-			session.setAttribute("boardid", request.getParameter("boardid"));
+		if (request.getParameter("pmboardid") != null) {
+			session.setAttribute("pmboardid", request.getParameter("pmboardid"));
 			session.setAttribute("pageNum", "1");
 
 		}
@@ -123,7 +123,7 @@ public class BoardController {
 //		int endPage = startPage + limit - 1;
 
 		int boardCount = bd.boardCount(boardid);
-		List<Board> list = bd.boardList(pageInt, limit, boardid);
+		List<pmBoard> list = bd.boardList(pageInt, limit, boardid);
 		// 페이징 작업
 		int bottomLine = 3;
 		int start = (pageInt - 1) / bottomLine * bottomLine + 1;
@@ -157,23 +157,23 @@ public class BoardController {
 		request.setAttribute("end", end);
 		request.setAttribute("bottomLine", bottomLine);
 
-		return "board/boardList";
+		return "pmboard/pmboardList";
 	}
 
-	@RequestMapping("boardInfo")
-	public String boardInfo(int num) throws Exception {
-		Board board = bd.boardOne(num);
+	@RequestMapping("pmboardInfo")
+	public String pmboardInfo(int num) throws Exception {
+		pmBoard board = bd.boardOne(num);
 		bd.readCountUp(num);
 
 		request.setAttribute("b", board);
-		return "board/boardInfo";
+		return "pmboard/pmboardInfo";
 	}
 
 	@RequestMapping("replyForm")
 	public String replyForm(int num) throws Exception {
-		Board board = bd.boardOne(num);
+		pmBoard board = bd.boardOne(num);
 		HttpSession session = request.getSession();
-		String boardid = (String) session.getAttribute("boardid");
+		String boardid = (String) session.getAttribute("pmboardid");
 		if (boardid == null)
 			boardid = "1";
 		String boardName = "";
@@ -189,30 +189,30 @@ public class BoardController {
 			break;
 		}
 
-		request.setAttribute("boardName", boardName);
-		request.setAttribute("board", board);
-		return "board/replyForm";
+		request.setAttribute("pmboardName", boardName);
+		request.setAttribute("pmboard", board);
+		return "pmboard/pmreplyForm";
 	}
 
-	@RequestMapping("replyPro")
-	public String replyPro(Board board) throws Exception {
+	@RequestMapping("pmreplyPro")
+	public String pmreplyPro(pmBoard board) throws Exception {
 		request.setCharacterEncoding("UTF-8");
-		String boardid = (String) request.getSession().getAttribute("boardid");
+		String boardid = (String) request.getSession().getAttribute("pmboardid");
 		if (boardid == null)
 			boardid = "1";
 
-		board.setFile1("");
-		board.setBoardid(boardid);
+		board.setPmbfile1("");
+		board.setPmbboardid(boardid);
 
 		String msg = "답글 등록 실패";
-		String url = "/board/replyForm?num=" + board.getNum();
-		board.setRef(board.getRef()); // 원조 세글 ref
-		board.setReflevel(board.getReflevel() + 1); // 기준글 reflevel + 1
+		String url = "/pmboard/pmreplyForm?num=" + board.getPmbnum();
+		board.setPmbref(board.getPmbref()); // 원조 새글 ref
+		board.setReflevel(board.getReflevel() + 1); // 기준글 reflevel + 1   // 2. 210~211번 행은 삭제하는게 맞겠지만 혹시 몰라 놔둡니다.
 		board.setRefstep(board.getRefstep() + 1); // print 순서
-		bd.refStepAdd(board.getRef(), board.getRefstep());
+		bd.refStepAdd(board.getPmbref(), board.getRefstep());
 		if (bd.insertReply(board) > 0) {
 			msg = "답글 등록 완료";
-			url = "/board/boardList";
+			url = "/pmboard/pmboardList";
 		}
 
 		request.setAttribute("msg", msg);
@@ -220,36 +220,36 @@ public class BoardController {
 		return "alert";
 	}
 
-	@RequestMapping("boardUpdateForm")
-	public String boardUpdateForm(int num) {
-		Board board = bd.boardOne(num);
+	@RequestMapping("pmboardUpdateForm")
+	public String pmboardUpdateForm(int num) {
+		pmBoard board = bd.boardOne(num);
 		request.setAttribute("b", board);
-		return "board/boardUpdateForm";
+		return "pmboard/pmboardUpdateForm";
 	}
 
-	@RequestMapping("boardUpdatePro")
-	public String boardUpdatePro(@RequestParam("uploadfile") MultipartFile multipartFile, Board board)
+	@RequestMapping("pmboardUpdatePro")
+	public String pmboardUpdatePro(@RequestParam("uploadfile") MultipartFile multipartFile, pmBoard board)
 			throws Exception {
-		String path = request.getServletContext().getRealPath("/") + "view/board/img";
+		String path = request.getServletContext().getRealPath("/") + "view/pmboard/pmimg";
 		String msg = "";
 		String url = "";
 
 		if (!multipartFile.isEmpty()) {
 			File file = new File(path, multipartFile.getOriginalFilename());
 			multipartFile.transferTo(file);
-			board.setFile1(multipartFile.getOriginalFilename());
+			board.setPmbfile1(multipartFile.getOriginalFilename());
 		} else {
-			board.setFile1("");
+			board.setPmbfile1("");
 		}
 
-		Board dbboard = bd.boardOne(board.getNum());
+		pmBoard dbboard = bd.boardOne(board.getPmbnum());
 		msg = "비밀번호가 틀렸습니다.";
-		url = "/board/boardUpdateForm?num=" + board.getNum();
+		url = "/pmboard/pmboardUpdateForm?num=" + board.getPmbnum();
 
-		if (board.getPass().equals(dbboard.getPass())) {
+		if (board.getPass().equals(dbboard.getPass())) {    // pmBoard에 없는 Pass(Password) => 삭제해야하는지.,.? 어디부터 어디까지 삭제해야하나 ㄷㄷ 
 			if (bd.boardUpdate(board) > 0) {
 				msg = "수정 완료";
-				url = "/board/boardInfo?num=" + board.getNum();
+				url = "/pmboard/pmboardInfo?num=" + board.getPmbnum();
 			} else {
 				msg = "수정 실패";
 			}
@@ -260,22 +260,22 @@ public class BoardController {
 		return "alert";
 	}
 
-	@RequestMapping("boardDeleteForm")
-	public String boardDeleteForm(int num) {
+	@RequestMapping("pmboardDeleteForm")
+	public String pmboardDeleteForm(int num) {
 		request.setAttribute("num", num);
-		return "board/boardDeleteForm";
+		return "pmboard/pmboardDeleteForm";
 	}
 
-	@RequestMapping("boardDeletePro")
-	public String boardDeletePro(String pass, int num) {
-		Board b = bd.boardOne(num);
+	@RequestMapping("pmboardDeletePro")
+	public String pmboardDeletePro(String pass, int num) {
+		pmBoard b = bd.boardOne(num);
 		String msg = "비밀번호가 틀렸습니다.";
-		String url = "/board/boardDeleteForm?num=" + num;
+		String url = "/pmboard/pmboardDeleteForm?num=" + num;
 
-		if (pass.equals(b.getPass())) {
+		if (pass.equals(b.getPass())) {    // pmBoard에 없는 Pass(Password)
 			if (bd.boardDelete(num) > 0) {
 				msg = "게시글이 삭제 되었습니다.";
-				url = "/board/boardList";
+				url = "/pmboard/pmboardList";
 			} else {
 				msg = "게시글 삭제를 실패하였습니다.";
 			}
